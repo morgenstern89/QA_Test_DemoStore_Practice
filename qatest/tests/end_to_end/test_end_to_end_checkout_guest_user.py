@@ -40,16 +40,21 @@ class TestEndToEndCheckoutGuestUser:
 
         order_received_p.verify_order_received_page_loaded()
 
-        #order_no = order_received_p.get_order_number()
-        # print('*********')
-        # print(order_no)
-        # print('*********')
+        order_no = order_received_p.get_order_number()
+        print('*********')
+        print(order_no)
+        print('*********')
 
-        # db_order=get_order_from_db_by_order_no(order_no)
-        # assert db_order,f"After creating order with FE, not found in DB."\
-        #                f"Order no: {order_no}."
-        #
-        #
+        db_order=get_order_from_db_by_order_no(order_no)
+        assert db_order,f"After creating order with FE, not found in DB."\
+                       f"Order no: {order_no}."
+
+        print("")
+        print("********")
+        print("PASS")
+        print("")
+
+
 
 
 

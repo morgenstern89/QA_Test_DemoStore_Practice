@@ -17,5 +17,5 @@ class TestLoginNegative:
         my_account.click_login_button()
 
         # verify error message
-        expected_err = 'ERROR:Invalid username.Lost your password?'
+        expected_err = 'Unknown username. Check again or try your email address.'
         my_account.wait_until_error_is_displayed(expected_err)
