@@ -9,9 +9,9 @@ def get_base_url():
     elif env.lower()=='prod':
         return 'http://demostore.prod.supersqa.com'
     else:
-<<<<<<< HEAD
+
         raise Exception(f"Unknown environment: {env}")
-=======
+
         raise Exception(f"Unknown environment: {env}")
 
 
@@ -22,7 +22,7 @@ def get_database_credentials():
     db_user=os.environ.get("DB_USER")
     db_password=os.environ.get("DB_PASSWORD")
     if not db_user or not db_password:
-        raise Exception("Environment variabls 'DB_USER' and 'DB_PASSWORD' must be set.")
+        raise Exception("Environment variables 'DB_USER' and 'DB_PASSWORD' must be set.")
 
     if env == 'test':
         db_host='127.0.0.1'
@@ -37,4 +37,4 @@ def get_database_credentials():
              "db_user":db_user,"db_password":db_password}
 
     return db_info
->>>>>>> 87a4dd3 (Initial commit)
+

@@ -1,14 +1,13 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChOptions
-from selenium.webdriver.firefox.options import Options as FFOptions
 import os
 import allure
 
 
 @pytest.fixture(scope="class")
 def init_driver(request):
-    pass
+
     supported_browsers = ['chrome', 'ch', 'headlesschrome', 'firefox', 'ff', 'headlessfirefox']
 
     browser = os.environ.get('BROWSER', None)
@@ -22,8 +21,6 @@ def init_driver(request):
 
     if browser in ('chrome', 'ch'):
         driver = webdriver.Chrome()
-    elif browser in ('firefox', 'ff'):
-        driver = webdriver.Firefox()
     elif browser in ('headlesschrome'):
         chrome_options = ChOptions()
         chrome_options.add_argument('--disable-gpu')
@@ -34,3 +31,54 @@ def init_driver(request):
     request.cls.driver = driver
     yield
     driver.quit()
+
+##For generating only pytest html report
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#     pytest_html = item.config.pluginmanager.getplugin("html")
+#     outcome = yield
+#     report = outcome.get_result()
+#     extra = getattr(report, "extra", [])
+#     if report.when == "call":
+#         # always add url to report
+#         xfail = hasattr(report, "wasxfail")
+#         #check if test failed
+#         if (report.skipped and xfail) or (report.failed and not xfail):
+#             is_frontend_test = True if 'init_driver' in item.fixturenames else False
+#             if is_frontend_test:
+#                 results_dir=os.environ.get("RESULTS_DIR")
+#                 if not results_dir:
+#                     raise Exception("Environment variable 'RESULTS_DIR' must be set.")
+#                 #import pdb;pdb.set_trace()
+#                 screen_shot_path = os.path.join(results_dir, item.name + '.png')
+#                 driver_fixture = item.funcargs['request']
+#                 driver_fixture.cls.driver.save_screenshot(screen_shot_path)
+#                 # only add additional html on failure
+#                 # extra.append(pytest_html.extras.html('<div style="background:orange">Additional HTML</div>'))
+#                 extra.append(pytest_html.extras.image(screen_shot_path))
+#
+#         report.extra = extra
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    pytest_html = item.config.pluginmanager.getplugin("html")
+    outcome = yield
+    report = outcome.get_result()
+    if report.when == "call":
+        # always add url to report
+        xfail = hasattr(report, "wasxfail")
+        #check if test failed
+        if (report.skipped and xfail) or (report.failed and not xfail):
+            is_frontend_test = True if 'init_driver' in item.fixturenames else False
+            if is_frontend_test:
+                results_dir=os.environ.get("RESULTS_DIR")
+                if not results_dir:
+                    raise Exception("Environment variable 'RESULTS_DIR' must be set.")
+
+                screen_shot_path = os.path.join(results_dir, item.name + '.png')
+                driver_fixture = item.funcargs['request']
+                allure.attach(driver_fixture.cls.driver.get_screen_shot_as_png(),
+                              name='screenshot',
+                              attachment_type=allure.attachment_type.PNG)
+
+

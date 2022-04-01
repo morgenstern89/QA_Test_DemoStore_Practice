@@ -8,5 +8,5 @@ class TestDummy():
         print("I am dummy test line 2.")
         self.driver.get("http://demostore.supersqa.com")
 
-        import pdb;
-        pdb.set_trace()
+        # import pdb;
+        # pdb.set_trace()

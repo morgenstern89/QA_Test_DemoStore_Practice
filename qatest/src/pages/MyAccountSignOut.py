@@ -27,7 +27,7 @@ class MyAccountSignOut(MyAccountSignOutLocator):
         self.sl.wait_and_input_text(self.LOGIN_PASSWORD,password)
 
     def click_login_button(self):
-        logger.debug("Clicking 'loin' button.")
+        logger.debug("Clicking 'login' button.")
         self.sl.wait_and_click(self.LOGIN_BTN)
 
     def wait_until_error_is_displayed(self,exp_err):
